@@ -35,6 +35,12 @@ pub enum Error {
     TokenSource(Box<dyn std::error::Error + Send + Sync>),
 }
 
+impl From<Error> for std::io::Error {
+    fn from(value: Error) -> Self {
+        std::io::Error::new(std::io::ErrorKind::Other, value)
+    }
+}
+
 /// Checks whether an HTTP response is successful and returns it, or returns an error.
 pub(crate) async fn check_response_status(response: Response) -> Result<Response, Error> {
     // Check the status code, returning the response if it is not an error.
